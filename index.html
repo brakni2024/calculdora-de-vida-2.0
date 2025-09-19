@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Vida</title>
+  <style>
+    :root {
+      --bg: #E3F2FD;
+      --txt: #333;
+      --btn: #5cb85c;
+      --btn-hover: #4cae4c;
+      --blue: #1E90FF;
+      --white: #fff;
+      --premium-gradient: linear-gradient(135deg, #1E90FF, #00C9A7);
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg);
+      color: var(--txt);
+    }
+
+    header, footer {
+      background: var(--premium-gradient);
+      color: var(--white);
+      padding: 1em 0;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    main { padding: 20px; }
+
+    section {
+      margin-bottom: 20px;
+      background-color: var(--white);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    /* MENÚ PREMIUM */
+    #menu {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #menu button {
+      margin: 15px;
+      padding: 16px 28px;
+      font-size: 18px;
+      border-radius: 30px;
+      cursor: pointer;
+      border: none;
+      background: var(--premium-gradient);
+      color: var(--white);
+      font-weight: bold;
+      letter-spacing: 1px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #menu button::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.3);
+      transition: left 0.3s ease;
+    }
+
+    #menu button:hover::after {
+      left: 100%;
+    }
+
+    #menu button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    #registro-inicio-sesion {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
+
+    #registro, #inicio-sesion {
+      width: 45%;
+      min-width: 260px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"], input[type="password"], input[type="date"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: var(--btn);
+      color: var(--white);
+      padding: 10px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover { background-color: var(--btn-hover); }
+
+    .volver-atras {
+      cursor: pointer;
+      font-size: 1.2em;
+      margin-bottom: 10px;
+      display: block;
+      color: var(--blue);
+    }
+
+    #estadisticasBtn { display: none; }
+  </style>
+</head>
+<body>
+  <header><h1>Calculadora de Vida</h1></header>
+  <main>
+    <section id="menu">
+      <button onclick="mostrarSeccion('registro-inicio-sesion')">Registro/Inicio</button>
+      <button onclick="mostrarSeccion('calculadora')">Calculadora</button>
+      <button id="estadisticasBtn" onclick="mostrarEstadisticas()">Estadísticas</button>
+    </section>
+
+    <section id="registro-inicio-sesion" style="display:none;">
+      <a href="#" class="volver-atras" onclick="mostrarSeccion('menu')">← Volver al Menú</a>
+      <h2>Registro e Inicio de Sesión</h2>
+      <div id="registro">
+        <h3>Registro</h3>
+        <label for="nombre-registro">Nombre:</label><input type="text" id="nombre-registro" required>
+        <label for="tarjeta-registro">Tarjeta:</label><input type="text" id="tarjeta-registro" required>
+        <label for="sexo-registro">Sexo:</label><input type="text" id="sexo-registro" required>
+        <label for="password-registro">Contraseña:</label><input type="password" id="password-registro" required>
+        <button onclick="registrarUsuario()">Registrarse</button>
+      </div>
+      <div id="inicio-sesion">
+        <h3>Inicio</h3>
+        <label for="nombre-inicio">Nombre:</label><input type="text" id="nombre-inicio" required>
+        <label for="password-inicio">Contraseña:</label><input type="password" id="password-inicio" required>
+        <button onclick="iniciarSesion()">Iniciar Sesión</button>
+      </div>
+    </section>
+
+    <section id="calculadora" style="display:none;">
+      <a href="#" class="volver-atras" onclick="mostrarSeccion('menu')">← Volver al Menú</a>
+      <h2>Calculadora de Vida</h2>
+      <label for="fecha-nacimiento">Nacimiento (YYYY-MM-DD):</label>
+      <input type="date" id="fecha-nacimiento" required>
+      <button onclick="calcularEdad()">Calcular Edad</button>
+      <div id="resultados" style="display:none;">
+        <h3>Resultados:</h3>
+        <p>Años: <span id="anios"></span></p>
+        <p>Meses: <span id="meses"></span></p>
+        <p>Semanas: <span id="semanas"></span></p>
+        <p>Días: <span id="dias"></span></p>
+        <p>Segundos: <span id="segundos"></span></p>
+        <p>Minutos: <span id="minutos"></span></p>
+        <button onclick="cerrarSesion()">Cerrar Sesión</button>
+        <button onclick="cerrarResultados()">Cerrar Sección</button>
+      </div>
+    </section>
+
+    <section id="estadisticas" style="display:none;">
+      <a href="#" class="volver-atras" onclick="mostrarSeccion('menu')">← Volver al Menú</a>
+      <h2>Estadísticas</h2>
+      <p>Usuarios Registrados: <span id="usuarios-registrados"></span></p>
+      <p>Inicios de Sesión: <span id="inicios-sesion"></span></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Hecho por Cristian Alejandro y Brakni Stiven</p>
+    <p>grado 11A</p>
+    <p>Institución Educativa Manuel María Mosquera</p>
+    <p>Entregado a Álvaro Stid</p>
+    <p>Materia: Informática</p>
+  </footer>
+
+  <script>
+    let usuarioActivo = null, esAdmin = false;
+
+    const mostrarSeccion = id => {
+      document.querySelectorAll('main > section').forEach(s => s.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
+    };
+
+    const actualizarEstadisticas = tipo => {
+      let estadisticas = JSON.parse(localStorage.getItem('estadisticas')) || { registros: 0, inicios_sesion: 0 };
+      tipo === 'registro' ? estadisticas.registros++ : estadisticas.inicios_sesion++;
+      localStorage.setItem('estadisticas', JSON.stringify(estadisticas));
+      mostrarEstadisticas();
+    };
+
+    const mostrarEstadisticas = () => {
+      if (!esAdmin) {
+        alert('No tienes permiso para ver las estadísticas.');
+        return;
+      }
+      let estadisticas = JSON.parse(localStorage.getItem('estadisticas')) || { registros: 0, inicios_sesion: 0 };
+      document.getElementById('usuarios-registrados').textContent = estadisticas.registros;
+      document.getElementById('inicios-sesion').textContent = estadisticas.inicios_sesion;
+      mostrarSeccion('estadisticas');
+    };
+
+    const registrarUsuario = () => {
+      const nombre = document.getElementById('nombre-registro').value,
+            tarjeta = document.getElementById('tarjeta-registro').value,
+            sexo = document.getElementById('sexo-registro').value,
+            password = document.getElementById('password-registro').value;
+      let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+      usuarios.push({ nombre, tarjeta, sexo, password });
+      localStorage.setItem('usuarios', JSON.stringify(usuarios));
+      actualizarEstadisticas('registro');
+      alert('Usuario registrado con éxito.');
+    };
+
+    const iniciarSesion = () => {
+      const nombre = document.getElementById('nombre-inicio').value;
+      const password = document.getElementById('password-inicio').value;
+
+      if (nombre === 'Steven' && password === '234') {
+        esAdmin = true;
+        usuarioActivo = { nombre: 'Stiven' };
+        alert('Perfecto, iniciaste sesión como administrador');
+        document.getElementById('estadisticasBtn').style.display = 'inline';
+        mostrarSeccion('calculadora');
+        actualizarEstadisticas('inicio_sesion');
+      } else {
+        let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+        const usuario = usuarios.find(u => u.nombre === nombre && u.password === password);
+        if (usuario) {
+          usuarioActivo = usuario;
+          esAdmin = false;
+          document.getElementById('estadisticasBtn').style.display = 'none';
+          mostrarSeccion('calculadora');
+          actualizarEstadisticas('inicio_sesion');
+          alert('Inicio de sesión exitoso.');
+        } else {
+          alert('Nombre o contraseña incorrectos.');
+        }
+      }
+    };
+
+    const cerrarSesion = () => {
+      usuarioActivo = null;
+      esAdmin = false;
+      document.getElementById('estadisticasBtn').style.display = 'none';
+      alert('Sesión cerrada.');
+      mostrarSeccion('menu');
+    };
+
+    const calcularEdad = () => {
+      if (!usuarioActivo) {
+        alert('Por favor, regístrese e inicie sesión para calcular su edad.');
+        return;
+      }
+      const fechaNacimiento = new Date(document.getElementById('fecha-nacimiento').value),
+            hoy = new Date();
+      let edadAnios = hoy.getFullYear() - fechaNacimiento.getFullYear();
+      const diferenciaMeses = hoy.getMonth() - fechaNacimiento.getMonth();
+      if (diferenciaMeses < 0 || (diferenciaMeses === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
+        edadAnios--;
+      }
+      const edadMeses = edadAnios * 12,
+            edadSemanas = edadAnios * 52.143,
+            edadDias = (hoy - fechaNacimiento) / (1000 * 60 * 60 * 24),
+            edadSegundos = edadDias * 24 * 60 * 60,
+            edadMinutos = edadSegundos / 60;
+
+      document.getElementById('anios').textContent = Math.floor(edadAnios);
+      document.getElementById('meses').textContent = Math.floor(edadMeses);
+      document.getElementById('semanas').textContent = Math.floor(edadSemanas);
+      document.getElementById('dias').textContent = Math.floor(edadDias);
+      document.getElementById('segundos').textContent = Math.floor(edadSegundos);
+      document.getElementById('minutos').textContent = Math.floor(edadMinutos);
+
+      document.getElementById('resultados').style.display = 'block';
+    };
+
+    const cerrarResultados = () => {
+      document.getElementById('resultados').style.display = 'none';
+      mostrarSeccion('calculadora');
+    };
+  </script>
+</body>
+</html>
